@@ -4,8 +4,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import tn.edu.esprit.c1info2.codemasters.BestDeal.domain.Deal;
@@ -13,22 +15,20 @@ import tn.edu.esprit.c1info2.codemasters.BestDeal.services.dao.AbstractDAO;
 
 public class DealDAO extends AbstractDAO<Deal> {
 
-	public DealDAO() {
-		super();
-	}
-
 	@Override
 	public boolean create(Deal object) {
 		try {
-			String sql = "insert into deal(`name`, `desc`, `price`, `owner`, `startDate`) values(?, ?, ?, ?, ?)";
+			String sql = "insert into deal(`name`, `desc`, `price`, `category`, `owner`, `startDate`)" +
+					"values(?, ?, ?, ?, ?, ?)";
 			PreparedStatement prepared = connexion.prepareStatement(sql);
 			prepared.setString(1, object.getName());
 			prepared.setString(2, object.getDesc());
 			prepared.setFloat(3, object.getPrice());
-			prepared.setInt(4, object.getOwnerId());
+			prepared.setString(4, object.getCategory());
+			prepared.setString(5, object.getOwnerId());
 			DateFormat dateFormat = new SimpleDateFormat("YYYY-MM-dd HH:MM:ss");
 			java.util.Date date = new java.util.Date();
-			prepared.setString(5, dateFormat.format(date));
+			prepared.setString(6, dateFormat.format(date));
 			return prepared.executeUpdate() > 0;
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -57,7 +57,19 @@ public class DealDAO extends AbstractDAO<Deal> {
 		return new Deal(resultSet.getString("name"),
 				resultSet.getString("desc"),
 				resultSet.getFloat("price"),
-				resultSet.getInt("owner"));
+				resultSet.getString("category"),
+				stringToJavaDate(resultSet.getString("startDate")),
+				resultSet.getString("owner"));
+	}
+
+	private Date stringToJavaDate(String source) {
+		DateFormat dateFormat = new SimpleDateFormat("YYYY-MM-dd HH:MM:ss");
+		try {
+			return dateFormat.parse(source);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	@Override
@@ -78,12 +90,14 @@ public class DealDAO extends AbstractDAO<Deal> {
 	@Override
 	public boolean update(Deal object) {
 		try {
-			String sql = "update deal set name = ?, desc = ?, price = ? where id = ?";
+			String sql = "update deal set name = ?, desc = ?, price = ?, category = ?, owner = ? where id = ?";
 			PreparedStatement prepared  = connexion.prepareStatement(sql);
 			prepared.setString(1, object.getName());
 			prepared.setString(2, object.getDesc());
 			prepared.setFloat(3, object.getPrice());
-			prepared.setInt(4, object.getId());
+			prepared.setString(4, object.getCategory());
+			prepared.setString(5, object.getOwnerId());
+			prepared.setInt(6, object.getId());
 			return prepared.executeUpdate() > 0;
 		} catch (SQLException ex) {
 			ex.printStackTrace();

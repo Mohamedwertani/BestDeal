@@ -2,14 +2,12 @@ package tn.edu.esprit.c1info2.codemasters.BestDeal.domain;
 
 public class User {
 
-	private int id;
 	private String firstName;
 	private String lastName;
 	private String login;
 	private String pwd;
 
-	public User(int id, String firstName, String lasttName, String login, String pwd) {
-		this.id = id;
+	public User(String firstName, String lasttName, String login, String pwd) {
 		this.firstName = firstName;
 		this.lastName = lasttName;
 		this.login = login;
@@ -18,12 +16,8 @@ public class User {
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", firstName=" + firstName + ", lasttName="
+		return "User [firstName=" + firstName + ", lasttName="
 				+ lastName + "]";
-	}
-
-	public int getId() {
-		return id;
 	}
 
 	public String getFirstName() {
@@ -64,9 +58,10 @@ public class User {
 		int result = 1;
 		result = prime * result
 				+ ((firstName == null) ? 0 : firstName.hashCode());
-		result = prime * result + id;
 		result = prime * result
 				+ ((lastName == null) ? 0 : lastName.hashCode());
+		result = prime * result + ((login == null) ? 0 : login.hashCode());
+		result = prime * result + ((pwd == null) ? 0 : pwd.hashCode());
 		return result;
 	}
 
@@ -84,12 +79,20 @@ public class User {
 				return false;
 		} else if (!firstName.equals(other.firstName))
 			return false;
-		if (id != other.id)
-			return false;
 		if (lastName == null) {
 			if (other.lastName != null)
 				return false;
 		} else if (!lastName.equals(other.lastName))
+			return false;
+		if (login == null) {
+			if (other.login != null)
+				return false;
+		} else if (!login.equals(other.login))
+			return false;
+		if (pwd == null) {
+			if (other.pwd != null)
+				return false;
+		} else if (!pwd.equals(other.pwd))
 			return false;
 		return true;
 	}

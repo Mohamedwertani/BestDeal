@@ -8,13 +8,16 @@ public class Deal {
 	private String name;
 	private String desc;
 	private float price;
-	private final int owner;
+	private String category;
+	private final String owner;
 	private Date startDate;
 
-	public Deal(String name, String desc, float price, int owner) {
+	public Deal(String name, String desc, float price, String category, Date startDate, String owner) {
 		this.name = name;
 		this.desc = desc;
 		this.price = price;
+		this.category = category;
+		this.startDate = startDate;
 		this.owner = owner;
 	}
 
@@ -34,7 +37,7 @@ public class Deal {
 		this.desc = desc;
 	}
 
-	public int getOwnerId() {
+	public String getOwnerId() {
 		return owner;
 	}
 
@@ -52,6 +55,14 @@ public class Deal {
 
 	public void setPrice(float price) {
 		this.price = price;
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
 	}
 
 }
