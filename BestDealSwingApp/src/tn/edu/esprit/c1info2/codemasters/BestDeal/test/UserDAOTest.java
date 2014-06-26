@@ -14,13 +14,13 @@ public class UserDAOTest {
 		UserDAO dao = new UserDAO();
 		dao.deleteAll();
 		// Create a simple user
-		User user = new User(0, "Seifeddine", "Dridi", "seif", "password");
+		User user = new User("Seifeddine", "Dridi", "seif", "password");
 		Assert.assertEquals(true, dao.create(user));
 		// Query table
 		user = dao.retrieve("firstName", "Seifeddine").get(0);
 		Assert.assertTrue(user != null);
 		// Update row
-		user.setLogin("NewLogin");
+		user.setFirstName("NewFirstName");
 		Assert.assertEquals(true, dao.update(user));
 		Assert.assertEquals(true, dao.delete(user));
 		dao.deleteAll();
@@ -30,9 +30,9 @@ public class UserDAOTest {
 	public void testRetrieve() {
 		UserDAO dao = new UserDAO();
 		dao.deleteAll();
-		dao.create(new User(0, "Seifeddine", "Dridi", "seif", "password"));
-		dao.create(new User(0, "Seifeddine", "Dridi", "seif", "password"));
-		dao.create(new User(0, "Seifeddine", "Dridi", "seif", "password"));
+		dao.create(new User("Seifeddine", "Dridi", "seif1", "password"));
+		dao.create(new User("Seifeddine", "Dridi", "seif2", "password"));
+		dao.create(new User("Seifeddine", "Dridi", "seif3", "password"));
 		Assert.assertEquals(3, dao.retrieveAll().size());
 		dao.deleteAll();
 	}

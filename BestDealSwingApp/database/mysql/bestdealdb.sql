@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client: localhost:4642
--- Généré le: Mer 25 Juin 2014 à 15:57
+-- Généré le: Jeu 26 Juin 2014 à 09:08
 -- Version du serveur: 5.5.24-log
 -- Version de PHP: 5.3.13
 
@@ -23,6 +23,30 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `category`
+--
+
+CREATE TABLE IF NOT EXISTS `category` (
+  `name` varchar(50) NOT NULL,
+  PRIMARY KEY (`name`),
+  KEY `name` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Contenu de la table `category`
+--
+
+INSERT INTO `category` (`name`) VALUES
+('Cameras and Optics'),
+('Car'),
+('Electronics'),
+('Hardware'),
+('Health and Beauty'),
+('Software');
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `deal`
 --
 
@@ -30,12 +54,15 @@ CREATE TABLE IF NOT EXISTS `deal` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
   `desc` varchar(150) NOT NULL,
-  `price` float NOT NULL DEFAULT '0',
-  `owner` int(11) NOT NULL,
+  `price` float NOT NULL,
+  `category` varchar(50) NOT NULL,
   `startDate` datetime NOT NULL,
+  `owner` varchar(50) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `owner` (`owner`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=15 ;
+  KEY `startDate` (`startDate`),
+  KEY `owner` (`owner`),
+  KEY `category` (`category`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 -- --------------------------------------------------------
 
@@ -44,13 +71,12 @@ CREATE TABLE IF NOT EXISTS `deal` (
 --
 
 CREATE TABLE IF NOT EXISTS `user` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
   `firstName` varchar(50) NOT NULL,
   `lastName` varchar(50) NOT NULL,
   `login` varchar(50) NOT NULL,
   `pwd` varchar(50) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=44 ;
+  PRIMARY KEY (`login`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Contraintes pour les tables exportées
@@ -60,7 +86,9 @@ CREATE TABLE IF NOT EXISTS `user` (
 -- Contraintes pour la table `deal`
 --
 ALTER TABLE `deal`
-  ADD CONSTRAINT `deal_ibfk_2` FOREIGN KEY (`owner`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `deal_ibfk_4` FOREIGN KEY (`category`) REFERENCES `category` (`name`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `deal_ibfk_2` FOREIGN KEY (`owner`) REFERENCES `user` (`login`),
+  ADD CONSTRAINT `deal_ibfk_3` FOREIGN KEY (`owner`) REFERENCES `user` (`login`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

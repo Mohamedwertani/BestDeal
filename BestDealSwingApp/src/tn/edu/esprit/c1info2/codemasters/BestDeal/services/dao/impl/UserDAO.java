@@ -12,10 +12,6 @@ import tn.edu.esprit.c1info2.codemasters.BestDeal.services.dao.AbstractDAO;
 
 public final class UserDAO extends AbstractDAO<User> {
 
-	public UserDAO() {
-		super();
-	}
-
 	@Override
 	public boolean create(User object) {
 		try {
@@ -65,8 +61,7 @@ public final class UserDAO extends AbstractDAO<User> {
 	}
 
 	private User mapResultSet(ResultSet resultSet) throws SQLException {
-		return new User(resultSet.getInt("id"),
-				resultSet.getString("firstName"),
+		return new User(resultSet.getString("firstName"),
 				resultSet.getString("lastName"),
 				resultSet.getString("login"),
 				resultSet.getString("pwd"));
@@ -75,13 +70,12 @@ public final class UserDAO extends AbstractDAO<User> {
 	@Override
 	public boolean update(User object) {
 		try {
-			String sql = "update user set firstName = ?, lastName = ?, login = ?, pwd = ? where id = ?";
+			String sql = "update user set firstName = ?, lastName = ?, pwd = ? where login = ?";
 			PreparedStatement prepared  = connexion.prepareStatement(sql);
 			prepared.setString(1, object.getFirstName());
 			prepared.setString(2, object.getLastName());
-			prepared.setString(3, object.getLogin());
-			prepared.setString(4, object.getPwd());
-			prepared.setInt(5, object.getId());
+			prepared.setString(3, object.getPwd());
+			prepared.setString(4, object.getLogin());
 			return prepared.executeUpdate() > 0;
 		} catch (SQLException ex) {
 			ex.printStackTrace();
@@ -92,8 +86,8 @@ public final class UserDAO extends AbstractDAO<User> {
 	@Override
 	public boolean delete(User object) {
 		try {
-			PreparedStatement prepared  = connexion.prepareStatement("delete from user where id = ?");
-			prepared.setInt(1, object.getId());
+			PreparedStatement prepared  = connexion.prepareStatement("delete from user where login = ?");
+			prepared.setString(1, object.getLogin());
 			return prepared.executeUpdate() > 0;
 		} catch (SQLException ex) {
 			ex.printStackTrace();

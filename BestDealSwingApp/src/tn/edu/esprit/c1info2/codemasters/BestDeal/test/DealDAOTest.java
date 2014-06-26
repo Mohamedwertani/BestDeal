@@ -2,6 +2,7 @@ package tn.edu.esprit.c1info2.codemasters.BestDeal.test;
 
 import static org.junit.Assert.fail;
 
+import java.util.Date;
 import java.util.List;
 
 import org.junit.Test;
@@ -22,7 +23,7 @@ public class DealDAOTest {
 			fail("Cannot insert new deal if table user is empty");
 		}
 		for (User user : userList) {
-			dao.create(new Deal("TV", "A television", 1000, user.getId()));
+			dao.create(new Deal("TV", "A television", 1000, "Electronics", new Date(), user.getLogin()));
 		}
 		dao.deleteAll();
 	}
