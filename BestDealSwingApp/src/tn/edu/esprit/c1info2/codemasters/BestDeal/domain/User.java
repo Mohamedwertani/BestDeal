@@ -7,9 +7,9 @@ public class User {
 	private String login;
 	private String pwd;
 
-	public User(String firstName, String lasttName, String login, String pwd) {
+	public User(String firstName, String lastName, String login, String pwd) {
 		this.firstName = firstName;
-		this.lastName = lasttName;
+		this.lastName = lastName;
 		this.login = login;
 		this.pwd = pwd;
 	}
