@@ -1,4 +1,4 @@
-package tn.edu.esprit.c1info2.codemasters.BestDeal.domain;
+package tn.edu.esprit.c1info2.codemasters.BestDeal.domain.deals;
 
 public class Category {
 
@@ -15,5 +15,5 @@ public class Category {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 }

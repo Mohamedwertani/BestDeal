@@ -7,8 +7,8 @@ import java.util.List;
 
 import org.junit.Test;
 
-import tn.edu.esprit.c1info2.codemasters.BestDeal.domain.Deal;
-import tn.edu.esprit.c1info2.codemasters.BestDeal.domain.User;
+import tn.edu.esprit.c1info2.codemasters.BestDeal.domain.deals.Deal;
+import tn.edu.esprit.c1info2.codemasters.BestDeal.domain.users.User;
 import tn.edu.esprit.c1info2.codemasters.BestDeal.services.dao.impl.DealDAO;
 import tn.edu.esprit.c1info2.codemasters.BestDeal.services.dao.impl.UserDAO;
 

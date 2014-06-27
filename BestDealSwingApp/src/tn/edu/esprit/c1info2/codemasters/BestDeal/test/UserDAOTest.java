@@ -4,7 +4,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import tn.edu.esprit.c1info2.codemasters.BestDeal.domain.User;
+import tn.edu.esprit.c1info2.codemasters.BestDeal.domain.users.User;
 import tn.edu.esprit.c1info2.codemasters.BestDeal.services.dao.impl.UserDAO;
 
 public class UserDAOTest {

@@ -4,10 +4,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
 import java.sql.PreparedStatement;
 
-import tn.edu.esprit.c1info2.codemasters.BestDeal.domain.User;
+import tn.edu.esprit.c1info2.codemasters.BestDeal.domain.users.User;
 import tn.edu.esprit.c1info2.codemasters.BestDeal.services.dao.AbstractDAO;
 
 public final class UserDAO extends AbstractDAO<User> {

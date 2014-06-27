@@ -1,4 +1,4 @@
-package tn.edu.esprit.c1info2.codemasters.BestDeal.domain;
+package tn.edu.esprit.c1info2.codemasters.BestDeal.domain.deals;
 
 import java.util.Date;
 

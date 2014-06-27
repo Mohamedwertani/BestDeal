@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import tn.edu.esprit.c1info2.codemasters.BestDeal.domain.Deal;
+import tn.edu.esprit.c1info2.codemasters.BestDeal.domain.deals.Deal;
 import tn.edu.esprit.c1info2.codemasters.BestDeal.services.dao.AbstractDAO;
 
 public class DealDAO extends AbstractDAO<Deal> {
@@ -30,7 +30,7 @@ public class DealDAO extends AbstractDAO<Deal> {
 			java.util.Date date = new java.util.Date();
 			prepared.setString(6, dateFormat.format(date));
 			return prepared.executeUpdate() > 0;
-		} catch (Exception ex) {
+		} catch (SQLException ex) {
 			ex.printStackTrace();
 		}
 		return false;
@@ -43,6 +43,21 @@ public class DealDAO extends AbstractDAO<Deal> {
 			PreparedStatement prepared =
 					connexion.prepareStatement("select * from deal where " + key + " = ?");
 			prepared.setString(1, value);
+			ResultSet resultSet = prepared.executeQuery();
+			while (resultSet.next()) {
+				dealList.add(mapResultSet(resultSet));
+			}
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		}
+		return dealList;
+	}
+
+	@Override
+	public List<Deal> retrieveAll() {
+		List<Deal> dealList = new ArrayList<Deal>();
+		try {
+			PreparedStatement prepared = connexion.prepareStatement("select * from deal");
 			ResultSet resultSet = prepared.executeQuery();
 			while (resultSet.next()) {
 				dealList.add(mapResultSet(resultSet));
@@ -70,21 +85,6 @@ public class DealDAO extends AbstractDAO<Deal> {
 			e.printStackTrace();
 		}
 		return null;
-	}
-
-	@Override
-	public List<Deal> retrieveAll() {
-		List<Deal> dealList = new ArrayList<Deal>();
-		try {
-			PreparedStatement prepared = connexion.prepareStatement("select * from deal");
-			ResultSet resultSet = prepared.executeQuery();
-			while (resultSet.next()) {
-				dealList.add(mapResultSet(resultSet));
-			}
-		} catch (SQLException ex) {
-			ex.printStackTrace();
-		}
-		return dealList;
 	}
 
 	@Override
