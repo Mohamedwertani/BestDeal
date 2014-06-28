@@ -7,7 +7,7 @@ import java.sql.SQLException;
 public class MysqlUtilities {
 
 	private static Connection myConnection;
-	private static String url = "jdbc:mysql://localhost:4642/bestdealdbdev";
+	private static String url = "jdbc:mysql://localhost:3306/bestdealdb";
 	private static String user = "root";
 	private static String password = "";
 

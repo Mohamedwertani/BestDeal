@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +35,7 @@ public class ReportingServer {
 					}
 				} catch (IOException e) {
 					e.printStackTrace();
+					return;
 				}
 			}
 		}
@@ -45,17 +47,21 @@ public class ReportingServer {
 			while (true) {
 				System.out.println("Server is listening on port " + port);
 				Socket clientSocket = serverSocket.accept();
-				System.out.println("A new client has established a connection");
-				new MyThread(clientSocket).run();
-				for (Socket cs : connectedClients) {
-					try {
-						PrintWriter writer = new PrintWriter(cs.getOutputStream());
-						writer.write("updateview");
-					} catch (IOException ex) {
-						ex.printStackTrace();
+				if (clientSocket != null) {
+					System.out.println("A new client has established a connection");
+					new MyThread(clientSocket).run();
+					for (Socket cs : connectedClients) {
+						try {
+							if (cs.isConnected()) {
+								PrintWriter writer = new PrintWriter(cs.getOutputStream());
+								writer.write("updateview");
+							}
+						} catch (IOException ex) {
+							ex.printStackTrace();
+						}
 					}
+					connectedClients.add(clientSocket);
 				}
-				connectedClients.add(clientSocket);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

@@ -98,18 +98,18 @@ public class UserLoginDialog extends JDialog {
 						String login = textField.getText();
 						String pwd = String.valueOf(passwordField.getPassword());
 						if (login == null || pwd == null) {
-							JOptionPane.showMessageDialog(null,
+							JOptionPane.showMessageDialog(UserLoginDialog.this,
 									"Missing login or password");
 						} else {
 							UserDAO userDAO = new UserDAO();
 							List<User> userList = userDAO.retrieve("login",
 									login);
 							if (userList.size() == 0) {
-								JOptionPane.showMessageDialog(null,
+								JOptionPane.showMessageDialog(UserLoginDialog.this,
 										"Login was not found in the database");
 							} else {
 								if (userList.get(0).getPwd().equals(pwd) == false) {
-									JOptionPane.showMessageDialog(null,
+									JOptionPane.showMessageDialog(UserLoginDialog.this,
 											"Password is wrong");
 								} else {
 									user = userList.get(0);
