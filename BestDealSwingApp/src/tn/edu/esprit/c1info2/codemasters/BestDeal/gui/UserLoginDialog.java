@@ -1,7 +1,6 @@
 package tn.edu.esprit.c1info2.codemasters.BestDeal.gui;
 
 import java.awt.BorderLayout;
-import java.awt.Dialog;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -22,8 +21,6 @@ import javax.swing.border.EmptyBorder;
 
 import tn.edu.esprit.c1info2.codemasters.BestDeal.domain.users.User;
 import tn.edu.esprit.c1info2.codemasters.BestDeal.services.dao.impl.UserDAO;
-
-import java.awt.Dialog.ModalityType;
 
 public class UserLoginDialog extends JDialog {
 
