@@ -37,19 +37,22 @@ public class AddDealDialog extends JDialog {
 	private JSpinner spinnerDealPrice;
 	private JComboBox comboBoxDealCategory;
 	private User connectedUser;
+	private JSpinner spinnerDealDuration;
 
 	/**
 	 * Create the dialog.
-	 * @param parent 
+	 * 
+	 * @param parent
 	 */
 	public AddDealDialog(JFrame parent, User connectedUser) {
-		super(parent);
+		super(parent, ModalityType.APPLICATION_MODAL);
 		this.connectedUser = connectedUser;
 		setBounds(100, 100, 450, 300);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		contentPanel.setLayout(new FormLayout(new ColumnSpec[] {
+		contentPanel
+				.setLayout(new FormLayout(new ColumnSpec[] {
 				FormFactory.RELATED_GAP_COLSPEC,
 				FormFactory.DEFAULT_COLSPEC,
 				FormFactory.RELATED_GAP_COLSPEC,
@@ -61,10 +64,12 @@ public class AddDealDialog extends JDialog {
 				FormFactory.RELATED_GAP_COLSPEC,
 				FormFactory.DEFAULT_COLSPEC,
 				FormFactory.RELATED_GAP_COLSPEC,
-				FormFactory.DEFAULT_COLSPEC,
+				ColumnSpec.decode("default:grow"),
 				FormFactory.RELATED_GAP_COLSPEC,
 				ColumnSpec.decode("default:grow"),},
 			new RowSpec[] {
+				FormFactory.RELATED_GAP_ROWSPEC,
+				FormFactory.DEFAULT_ROWSPEC,
 				FormFactory.RELATED_GAP_ROWSPEC,
 				FormFactory.DEFAULT_ROWSPEC,
 				FormFactory.RELATED_GAP_ROWSPEC,
@@ -118,6 +123,14 @@ public class AddDealDialog extends JDialog {
 			contentPanel.add(comboBoxDealCategory, "12, 12, fill, default");
 		}
 		{
+			JLabel lblDuration = new JLabel("Duration (minutes)");
+			contentPanel.add(lblDuration, "8, 14");
+		}
+		{
+			spinnerDealDuration = new JSpinner();
+			contentPanel.add(spinnerDealDuration, "12, 14");
+		}
+		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
@@ -126,17 +139,21 @@ public class AddDealDialog extends JDialog {
 				okButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						String dealName = textFieldDealName.getText();
-						if (dealName != null) {
+						if (dealName.isEmpty() == false) {
 							String dealDesc = textFieldDealDesc.getText();
-							Integer dealPrice = (Integer) spinnerDealPrice.getValue();
+							Integer dealPrice = (Integer) spinnerDealPrice
+									.getValue();
 							String dealCategory = (String) comboBoxDealCategory.getSelectedItem();
+							int dealDuration = (int) spinnerDealDuration.getValue();
 							DealDAO dealDAO = new DealDAO();
-							dealDAO.create(new Deal(dealName, dealDesc, dealPrice, dealCategory, null,
+							dealDAO.create(new Deal(0, dealName, dealDesc,
+									dealPrice, dealCategory, null, dealDuration * 60 * 1000,
 									AddDealDialog.this.connectedUser.getLogin()));
 							AddDealDialog.this.dispose();
-							
+
 						} else {
-							JOptionPane.showMessageDialog(AddDealDialog.this, "Please enter a deal name");
+							JOptionPane.showMessageDialog(AddDealDialog.this,
+									"Please enter a deal name");
 						}
 					}
 				});

@@ -18,17 +18,18 @@ public class DealDAO extends AbstractDAO<Deal> {
 	@Override
 	public boolean create(Deal object) {
 		try {
-			String sql = "insert into deal(`name`, `desc`, `price`, `category`, `owner`, `startDate`)" +
-					"values(?, ?, ?, ?, ?, ?)";
+			String sql = "insert into deal(`name`, `desc`, `price`, `category`, `owner`, `startDate`, `duration`)" +
+					"values(?, ?, ?, ?, ?, ?, ?)";
 			PreparedStatement prepared = connexion.prepareStatement(sql);
 			prepared.setString(1, object.getName());
 			prepared.setString(2, object.getDesc());
 			prepared.setFloat(3, object.getPrice());
 			prepared.setString(4, object.getCategory());
-			prepared.setString(5, object.getOwnerId());
-			DateFormat dateFormat = new SimpleDateFormat("YYYY-MM-dd HH:MM:ss");
+			prepared.setString(5, object.getOwner());
+			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			java.util.Date date = new java.util.Date();
 			prepared.setString(6, dateFormat.format(date));
+			prepared.setInt(7, object.getDealDuration());
 			return prepared.executeUpdate() > 0;
 		} catch (SQLException ex) {
 			ex.printStackTrace();
@@ -69,16 +70,18 @@ public class DealDAO extends AbstractDAO<Deal> {
 	}
 
 	private Deal mapResultSet(ResultSet resultSet) throws SQLException {
-		return new Deal(resultSet.getString("name"),
+		return new Deal(resultSet.getInt("id"),
+				resultSet.getString("name"),
 				resultSet.getString("desc"),
 				resultSet.getFloat("price"),
 				resultSet.getString("category"),
 				stringToJavaDate(resultSet.getString("startDate")),
+				resultSet.getInt("duration"),
 				resultSet.getString("owner"));
 	}
 
 	private Date stringToJavaDate(String source) {
-		DateFormat dateFormat = new SimpleDateFormat("YYYY-MM-dd HH:MM:ss");
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try {
 			return dateFormat.parse(source);
 		} catch (ParseException e) {
@@ -90,14 +93,14 @@ public class DealDAO extends AbstractDAO<Deal> {
 	@Override
 	public boolean update(Deal object) {
 		try {
-			String sql = "update deal set name = ?, desc = ?, price = ?, category = ?, owner = ? where id = ?";
+			String sql = "update deal set price = ?, owner = ? where id = ?";
 			PreparedStatement prepared  = connexion.prepareStatement(sql);
-			prepared.setString(1, object.getName());
-			prepared.setString(2, object.getDesc());
-			prepared.setFloat(3, object.getPrice());
-			prepared.setString(4, object.getCategory());
-			prepared.setString(5, object.getOwnerId());
-			prepared.setInt(6, object.getId());
+//			prepared.setString(1, object.getName());
+//			prepared.setString(2, object.getDesc());
+			prepared.setFloat(1, object.getPrice());
+//			prepared.setString(4, object.getCategory());
+			prepared.setString(2, object.getOwner());
+			prepared.setInt(3, object.getId());
 			return prepared.executeUpdate() > 0;
 		} catch (SQLException ex) {
 			ex.printStackTrace();

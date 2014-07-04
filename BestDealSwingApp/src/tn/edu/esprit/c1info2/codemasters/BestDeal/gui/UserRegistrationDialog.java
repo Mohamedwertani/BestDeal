@@ -37,7 +37,7 @@ public class UserRegistrationDialog extends JDialog {
 	 * Create the dialog.
 	 */
 	public UserRegistrationDialog(JFrame parent) {
-		super(parent, "", Dialog.ModalityType.DOCUMENT_MODAL);
+		super(parent, "Register", Dialog.ModalityType.DOCUMENT_MODAL);
 		setResizable(false);
 		setModalExclusionType(ModalExclusionType.APPLICATION_EXCLUDE);
 		setBounds(100, 100, 450, 300);

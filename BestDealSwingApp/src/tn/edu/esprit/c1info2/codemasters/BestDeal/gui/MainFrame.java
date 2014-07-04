@@ -1,10 +1,17 @@
 package tn.edu.esprit.c1info2.codemasters.BestDeal.gui;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.List;
 
@@ -13,10 +20,11 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.Timer;
-import javax.swing.border.LineBorder;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import tn.edu.esprit.c1info2.codemasters.BestDeal.domain.deals.Deal;
@@ -25,131 +33,183 @@ import tn.edu.esprit.c1info2.codemasters.BestDeal.services.dao.impl.DealDAO;
 
 public class MainFrame extends JFrame {
 
-	private static final long serialVersionUID = 8886499619398791611L;
+	private static final long serialVersionUID = -7379992836666197521L;
 
+	private JPanel contentPane;
 	private JTable table;
 	private User client;
-	private JLabel lblYouAreNot;
 	private Socket socket;
-	private JLabel lblEstablishingConnectionTo;
 
-	private Timer updatingTimer;
+	public static final String serverAddress = "127.0.0.1";
+	public static final int port = 125;
+
+	private JLabel lblServerStatus;
+	private JLabel lblUserStatus;
 
 	/**
-	 * Create the application.
+	 * Launch the application.
 	 */
-	public MainFrame() {
-		initialize();
-		updatingTimer = new Timer(4000, new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				connectToReportingServer();
-				MainFrame.this.repaint();
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					MainFrame frame = new MainFrame();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		});
-		updatingTimer.start();
 	}
 
 	/**
-	 * Initialize the contents of the 
+	 * Create the frame.
 	 */
-	private void initialize() {
-		setResizable(false);
-		setBounds(100, 100, 579, 323);
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
+	public MainFrame() {
+		super("BestDeal - Best deals for everyone!");
+		initialize();
+		socket = connectToReportingServer();
+		if (socket != null) {
+			lblServerStatus.setText("Connected to reporting server");
+			ServerThread thread = new ServerThread(socket, new Runnable() {
 
-		lblYouAreNot = new JLabel("You are not connected");
-		lblYouAreNot.setBounds(10, 7, 132, 14);
-		lblYouAreNot.setForeground(Color.RED);
-
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 68, 543, 145);
-
-		table = new JTable();
-		table.setModel(new DefaultTableModel(
-			new Object[][] {
-			},
-			new String[] {
-				"Name", "Description", "Price", "Category", "Owner", "Start date", "Remaining"
-			}
-		) {
-			Class[] columnTypes = new Class[] {
-				String.class, String.class, Float.class, String.class, String.class, String.class, Integer.class
-			};
-			public Class getColumnClass(int columnIndex) {
-				return columnTypes[columnIndex];
-			}
-		});
-		table.setBorder(new LineBorder(new Color(0, 0, 0)));
+				@Override
+				public void run() {
+					MainFrame.this.retrieveDealList();
+				}
+			});
+			thread.start();
+		} else {
+			lblServerStatus.setText("Could not connect to reporting server");
+		}
 		retrieveDealList();
+	}
 
-		scrollPane.setViewportView(table);
-		getContentPane().setLayout(null);
-		getContentPane().add(lblYouAreNot);
-		getContentPane().add(scrollPane);
-
+	private void initialize() {
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 450, 300);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		contentPane.setLayout(new BorderLayout(0, 0));
+		setContentPane(contentPane);
+		
 		Box horizontalBox = Box.createHorizontalBox();
-		horizontalBox.setBounds(384, 11, 169, 21);
-		getContentPane().add(horizontalBox);
-
+		contentPane.add(horizontalBox, BorderLayout.NORTH);
+		
+		lblUserStatus = new JLabel("You are not logged in");
+		lblUserStatus.setForeground(Color.RED);
+		horizontalBox.add(lblUserStatus);
+		
+		Component glue = Box.createGlue();
+		horizontalBox.add(glue);
+		
 		JButton btnLogin = new JButton("Login");
-		horizontalBox.add(btnLogin);
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				UserLoginDialog d = new UserLoginDialog(MainFrame.this);
-				client = d.showDialog();
-				if (client != null) {
-					lblYouAreNot.setForeground(new Color(0xFF00));
-					lblYouAreNot.setText("Hello " + client.getFirstName());
+				User user = d.showDialog();
+				if (user != null) {
+					client = user;
+					lblUserStatus.setForeground(Color.GREEN);
+					lblUserStatus.setText("Hello " + client.getFirstName());
+				} else if (user == client) {
+					lblUserStatus.setForeground(Color.RED);
+					lblUserStatus.setText("You are not logged in");
 				}
 			}
 		});
-
+		horizontalBox.add(btnLogin);
+		
 		Component horizontalStrut = Box.createHorizontalStrut(20);
 		horizontalBox.add(horizontalStrut);
-
+		
 		JButton btnRegister = new JButton("Register");
-		horizontalBox.add(btnRegister);
-		
-		lblEstablishingConnectionTo = new JLabel("Establishing connection to reporting server...");
-		lblEstablishingConnectionTo.setBounds(10, 270, 333, 14);
-		getContentPane().add(lblEstablishingConnectionTo);
-		
-		JButton btnAddDeal = new JButton("Add Deal");
-		btnAddDeal.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (client != null) {
-					AddDealDialog addDealDialog = new AddDealDialog(MainFrame.this, client);
-					addDealDialog.setVisible(true);
-					retrieveDealList();
-					MainFrame.this.repaint();
-				} else {
-					JOptionPane.showMessageDialog(MainFrame.this, "You have to login before you can add a new deal");
-				}
-			}
-		});
-		btnAddDeal.setBounds(10, 222, 89, 23);
-		getContentPane().add(btnAddDeal);
-
 		btnRegister.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				UserRegistrationDialog registerDialog = new UserRegistrationDialog(MainFrame.this);
 				registerDialog.setVisible(true);
 			}
 		});
+		horizontalBox.add(btnRegister);
+		
+		Box verticalBox = Box.createVerticalBox();
+		contentPane.add(verticalBox, BorderLayout.CENTER);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		verticalBox.add(scrollPane);
+		
+		table = new JTable();
+		table.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				String dealName = (String) table.getModel().getValueAt(table.getSelectedRow(), 0);
+				DealView dealView = new DealView(MainFrame.this, client, dealName);
+				dealView.setVisible(true);
+				// Update deal list
+				retrieveDealList();
+			}
+		});
+		table.setModel(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"Name", "Owner"
+			}
+		));
+		scrollPane.setViewportView(table);
+		
+		Box horizontalBox_1 = Box.createHorizontalBox();
+		contentPane.add(horizontalBox_1, BorderLayout.SOUTH);
+		
+		JButton btnAddDeal = new JButton("Add Deal");
+		horizontalBox_1.add(btnAddDeal);
+		btnAddDeal.setAlignmentX(Component.RIGHT_ALIGNMENT);
+		btnAddDeal.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (client != null) {
+					AddDealDialog addDealDialog = new AddDealDialog(MainFrame.this, client);
+					addDealDialog.setVisible(true);
+					retrieveDealList();
+					if (socket != null) {
+						notifyServer(socket);
+					}
+				} else {
+					JOptionPane.showMessageDialog(MainFrame.this, "You have to login first before you can add a new deal");
+				}
+			}
+		});
+		btnAddDeal.setHorizontalAlignment(SwingConstants.LEFT);
+		
+		Component glue_1 = Box.createGlue();
+		horizontalBox_1.add(glue_1);
+		
+		lblServerStatus = new JLabel("Establishing connection to reporting server...");
+		horizontalBox_1.add(lblServerStatus);
 	}
 
-	public void retrieveDealList() {
+	public static void notifyServer(Socket socket) {
+		if (socket.isConnected()) {
+			try {
+				PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
+				writer.println("dbchanged");
+			} catch (IOException e) {
+				System.out.println("An error occured while trying to notify reporting server");
+			}
+		}
+	}
+
+	private void retrieveDealList() {
 		DealDAO dealDAO = new DealDAO();
 		List<Deal> dealList = dealDAO.retrieveAll();
 		DefaultTableModel model = (DefaultTableModel) table.getModel();
-		for (Deal deal : dealList) {
-			model.addRow(new Object[] { deal.getName(), deal.getDesc(),
-					deal.getPrice(), deal.getCategory(), deal.getOwnerId(),
-					deal.getStartDate().toString(), 0 });
+		int rows = model.getRowCount();
+		for(int i = rows - 1; i >= 0; i--) {
+		   model.removeRow(i);
 		}
-		table.updateUI();
+		for (Deal deal : dealList) {
+			model.addRow(new Object[] { deal.getName(), deal.getOwner()});
+		}
+		repaint();
 	}
 
 	public User getClient() {
@@ -160,19 +220,14 @@ public class MainFrame extends JFrame {
 		this.client = client;
 	}
 
-	public void connectToReportingServer() {
+	public static Socket connectToReportingServer() {
 		try {
-			if (socket == null || socket.isClosed()) {
-				socket = new Socket("127.0.0.1", 125);
-				if (socket.isConnected()) {
-					lblEstablishingConnectionTo.setText("Connected to reporting server");
-				} else {
-					lblEstablishingConnectionTo.setText("Could not connect to reporting server");
-				}
-			}
+			Socket socket = new Socket(serverAddress, port);
+			return socket;
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.out.println("Could not connect to reporting server (" + serverAddress + ":" + port + ")");
 		}
+		return null;
 	}
 
 }

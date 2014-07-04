@@ -23,7 +23,7 @@ public class DealDAOTest {
 			fail("Cannot insert new deal if table user is empty");
 		}
 		for (User user : userList) {
-			dao.create(new Deal("TV", "A television", 1000, "Electronics", new Date(), user.getLogin()));
+			dao.create(new Deal(0, "TV", "A television", 1000, "Electronics", new Date(), 300000, user.getLogin()));
 		}
 		dao.deleteAll();
 	}
