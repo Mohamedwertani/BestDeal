@@ -1,7 +1,6 @@
 package tn.edu.esprit.c1info2.codemasters.BestDeal.gui;
 
 import java.awt.BorderLayout;
-import java.awt.Dialog;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -22,8 +21,6 @@ import javax.swing.border.EmptyBorder;
 
 import tn.edu.esprit.c1info2.codemasters.BestDeal.domain.users.User;
 import tn.edu.esprit.c1info2.codemasters.BestDeal.services.dao.impl.UserDAO;
-
-import java.awt.Dialog.ModalityType;
 
 public class UserLoginDialog extends JDialog {
 
@@ -105,11 +102,13 @@ public class UserLoginDialog extends JDialog {
 							List<User> userList = userDAO.retrieve("login",
 									login);
 							if (userList.size() == 0) {
-								JOptionPane.showMessageDialog(UserLoginDialog.this,
+								JOptionPane.showMessageDialog(
+										UserLoginDialog.this,
 										"Login was not found in the database");
 							} else {
 								if (userList.get(0).getPwd().equals(pwd) == false) {
-									JOptionPane.showMessageDialog(UserLoginDialog.this,
+									JOptionPane.showMessageDialog(
+											UserLoginDialog.this,
 											"Password is wrong");
 								} else {
 									user = userList.get(0);
