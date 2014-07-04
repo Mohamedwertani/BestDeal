@@ -33,9 +33,7 @@ public class MainApplication {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-
 		frame = new MainFrame();
-
 	}
 
 }

@@ -32,12 +32,8 @@ public class MainFrame extends JFrame {
 	private JLabel lblYouAreNot;
 	private Socket socket;
 	private JLabel lblEstablishingConnectionTo;
-	private JButton btnLogOff = new JButton("Log off");
-	private JButton btnLogin = new JButton("Login");
-	private JButton btnRegister = new JButton("Register");
-	private Timer updatingTimer;
 
-	public static boolean etatUser;
+	private Timer updatingTimer;
 
 	/**
 	 * Create the application.
@@ -56,7 +52,7 @@ public class MainFrame extends JFrame {
 	}
 
 	/**
-	 * Initialize the contents of the
+	 * Initialize the contents of the 
 	 */
 	private void initialize() {
 		setResizable(false);
@@ -71,13 +67,16 @@ public class MainFrame extends JFrame {
 		scrollPane.setBounds(10, 68, 543, 145);
 
 		table = new JTable();
-		table.setModel(new DefaultTableModel(new Object[][] {}, new String[] {
-				"Name", "Description", "Price", "Category", "Owner",
-				"Start date", "Remaining" }) {
-			Class[] columnTypes = new Class[] { String.class, String.class,
-					Float.class, String.class, String.class, String.class,
-					Integer.class };
-
+		table.setModel(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"Name", "Description", "Price", "Category", "Owner", "Start date", "Remaining"
+			}
+		) {
+			Class[] columnTypes = new Class[] {
+				String.class, String.class, Float.class, String.class, String.class, String.class, Integer.class
+			};
 			public Class getColumnClass(int columnIndex) {
 				return columnTypes[columnIndex];
 			}
@@ -90,22 +89,19 @@ public class MainFrame extends JFrame {
 		getContentPane().add(lblYouAreNot);
 		getContentPane().add(scrollPane);
 
-		final Box horizontalBox = Box.createHorizontalBox();
-		horizontalBox.setBounds(385, 11, 168, 21);
+		Box horizontalBox = Box.createHorizontalBox();
+		horizontalBox.setBounds(384, 11, 169, 21);
+		getContentPane().add(horizontalBox);
 
+		JButton btnLogin = new JButton("Login");
 		horizontalBox.add(btnLogin);
 		btnLogin.addActionListener(new ActionListener() {
-
 			public void actionPerformed(ActionEvent e) {
 				UserLoginDialog d = new UserLoginDialog(MainFrame.this);
 				client = d.showDialog();
 				if (client != null) {
-					etatUser = true;
 					lblYouAreNot.setForeground(new Color(0xFF00));
 					lblYouAreNot.setText("Hello " + client.getFirstName());
-					getContentPane().add(btnLogOff);
-					getContentPane().remove(horizontalBox);
-					MainFrame.this.repaint();
 				}
 			}
 		});
@@ -113,49 +109,32 @@ public class MainFrame extends JFrame {
 		Component horizontalStrut = Box.createHorizontalStrut(20);
 		horizontalBox.add(horizontalStrut);
 
+		JButton btnRegister = new JButton("Register");
 		horizontalBox.add(btnRegister);
-
-		lblEstablishingConnectionTo = new JLabel(
-				"Establishing connection to reporting server...");
+		
+		lblEstablishingConnectionTo = new JLabel("Establishing connection to reporting server...");
 		lblEstablishingConnectionTo.setBounds(10, 270, 333, 14);
 		getContentPane().add(lblEstablishingConnectionTo);
-
+		
 		JButton btnAddDeal = new JButton("Add Deal");
 		btnAddDeal.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (client != null) {
-					AddDealDialog addDealDialog = new AddDealDialog(
-							MainFrame.this, client);
+					AddDealDialog addDealDialog = new AddDealDialog(MainFrame.this, client);
 					addDealDialog.setVisible(true);
 					retrieveDealList();
 					MainFrame.this.repaint();
 				} else {
-					JOptionPane.showMessageDialog(MainFrame.this,
-							"You have to login before you can add a new deal");
+					JOptionPane.showMessageDialog(MainFrame.this, "You have to login before you can add a new deal");
 				}
 			}
 		});
 		btnAddDeal.setBounds(10, 222, 89, 23);
-		btnLogOff.setBounds(10, 34, 89, 21);
- 
-		getContentPane().add(horizontalBox);
 		getContentPane().add(btnAddDeal);
-
-		btnLogOff.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				client = null;
-				getContentPane().add(horizontalBox);
-				getContentPane().remove(btnLogOff);
-				lblYouAreNot.setText("You are not connected");
-				lblYouAreNot.setForeground(Color.RED);
-				MainFrame.this.repaint();
-			}
-		});
 
 		btnRegister.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				UserRegistrationDialog registerDialog = new UserRegistrationDialog(
-						MainFrame.this);
+				UserRegistrationDialog registerDialog = new UserRegistrationDialog(MainFrame.this);
 				registerDialog.setVisible(true);
 			}
 		});
@@ -186,15 +165,14 @@ public class MainFrame extends JFrame {
 			if (socket == null || socket.isClosed()) {
 				socket = new Socket("127.0.0.1", 125);
 				if (socket.isConnected()) {
-					lblEstablishingConnectionTo
-							.setText("Connected to reporting server");
+					lblEstablishingConnectionTo.setText("Connected to reporting server");
 				} else {
-					lblEstablishingConnectionTo
-							.setText("Could not connect to reporting server");
+					lblEstablishingConnectionTo.setText("Could not connect to reporting server");
 				}
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
+
 }
