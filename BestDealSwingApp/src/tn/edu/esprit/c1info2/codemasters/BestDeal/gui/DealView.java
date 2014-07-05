@@ -72,10 +72,7 @@ public class DealView extends JDialog {
 				} else {
 					deal = retireveDealByName(deal.getName());
 					textFieldRemainingTime.setText("Deal has expired");
-					JOptionPane.showMessageDialog(
-							DealView.this,
-							"Bidding is over. This deal now belongs to "
-									+ deal.getOwner());
+					JOptionPane.showMessageDialog(DealView.this, "Bidding is over. This deal now belongs to " + deal.getOwner());
 					timer.stop();
 					DealView.this.dispose();
 				}
@@ -223,15 +220,11 @@ public class DealView extends JDialog {
 		btnBid.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (loggedInUser == null) {
-					JOptionPane.showMessageDialog(DealView.this,
-							"You have to log in before you can start bidding");
+					JOptionPane.showMessageDialog(DealView.this, "You have to log in before you can start bidding");
 				} else {
 					int dealPrice = (int) spinnerDealNewPrice.getValue();
 					if (deal.getPrice() >= dealPrice) {
-						JOptionPane.showMessageDialog(
-								DealView.this,
-								"Bid value must be higher than "
-										+ deal.getPrice());
+						JOptionPane.showMessageDialog(DealView.this, "Bid value must be higher than " + deal.getPrice());
 						return;
 					}
 					deal.setPrice(dealPrice);

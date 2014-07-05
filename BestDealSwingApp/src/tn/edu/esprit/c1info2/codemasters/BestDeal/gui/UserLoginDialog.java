@@ -35,7 +35,6 @@ public class UserLoginDialog extends JDialog {
 	 */
 	public UserLoginDialog(JFrame parent) {
 		super(parent, "Login", ModalityType.APPLICATION_MODAL);
-		setResizable(false);
 		setModalExclusionType(ModalExclusionType.APPLICATION_EXCLUDE);
 		setBounds(100, 100, 450, 200);
 		getContentPane().setLayout(new BorderLayout());

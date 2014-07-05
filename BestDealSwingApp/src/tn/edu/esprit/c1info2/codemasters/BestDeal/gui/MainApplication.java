@@ -1,6 +1,8 @@
 package tn.edu.esprit.c1info2.codemasters.BestDeal.gui;
 
 import java.awt.EventQueue;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 
 public class MainApplication {
 

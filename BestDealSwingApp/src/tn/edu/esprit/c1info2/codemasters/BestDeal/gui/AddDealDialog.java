@@ -46,6 +46,7 @@ public class AddDealDialog extends JDialog {
 	 */
 	public AddDealDialog(JFrame parent, User connectedUser) {
 		super(parent, ModalityType.APPLICATION_MODAL);
+		setTitle("Add New Deal");
 		this.connectedUser = connectedUser;
 		setBounds(100, 100, 450, 300);
 		getContentPane().setLayout(new BorderLayout());

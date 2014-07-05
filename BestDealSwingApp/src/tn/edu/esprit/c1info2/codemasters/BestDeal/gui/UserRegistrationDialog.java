@@ -38,7 +38,6 @@ public class UserRegistrationDialog extends JDialog {
 	 */
 	public UserRegistrationDialog(JFrame parent) {
 		super(parent, "Register", Dialog.ModalityType.DOCUMENT_MODAL);
-		setResizable(false);
 		setModalExclusionType(ModalExclusionType.APPLICATION_EXCLUDE);
 		setBounds(100, 100, 450, 300);
 		getContentPane().setLayout(new BorderLayout());
@@ -46,11 +45,11 @@ public class UserRegistrationDialog extends JDialog {
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		GridBagLayout gbl_contentPanel = new GridBagLayout();
 		gbl_contentPanel.columnWidths = new int[] { 0, 0, 0, 0, 0, 0, 0 };
-		gbl_contentPanel.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0 };
+		gbl_contentPanel.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 		gbl_contentPanel.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0,
 				1.0, 1.0, Double.MIN_VALUE };
 		gbl_contentPanel.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0,
-				0.0, 0.0, Double.MIN_VALUE };
+				0.0, 0.0, 0.0, Double.MIN_VALUE };
 		contentPanel.setLayout(gbl_contentPanel);
 		{
 			JLabel lblNewLabel = new JLabel("First name");
@@ -126,7 +125,7 @@ public class UserRegistrationDialog extends JDialog {
 		{
 			JLabel lblRepeatPassword = new JLabel("Repeat Password");
 			GridBagConstraints gbc_lblRepeatPassword = new GridBagConstraints();
-			gbc_lblRepeatPassword.insets = new Insets(0, 0, 0, 5);
+			gbc_lblRepeatPassword.insets = new Insets(0, 0, 5, 5);
 			gbc_lblRepeatPassword.gridx = 2;
 			gbc_lblRepeatPassword.gridy = 6;
 			contentPanel.add(lblRepeatPassword, gbc_lblRepeatPassword);
@@ -134,7 +133,7 @@ public class UserRegistrationDialog extends JDialog {
 		{
 			passwordFieldRepeat = new JPasswordField();
 			GridBagConstraints gbc_passwordFieldRepeat = new GridBagConstraints();
-			gbc_passwordFieldRepeat.insets = new Insets(0, 0, 0, 5);
+			gbc_passwordFieldRepeat.insets = new Insets(0, 0, 5, 5);
 			gbc_passwordFieldRepeat.fill = GridBagConstraints.HORIZONTAL;
 			gbc_passwordFieldRepeat.gridx = 4;
 			gbc_passwordFieldRepeat.gridy = 6;
